@@ -34,6 +34,11 @@ Polymer({
             status: 'uninitialised',
             data: [],
             metadata: {}
+          },
+          campaign: {
+            status: 'uninitialised',
+            data: [],
+            metadata: {}
           }
         }
       },

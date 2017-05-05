@@ -19,11 +19,9 @@ link(rel="import", href="/src/d4l-header/d4l-header.html")
 link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/shared-styles.html")
 
-link(rel="import", href="./d4l-dashboard-card.html")
-
 script(src="/bower_components/sugar/dist/sugar.min.js")
 
-dom-module#d4l-dashboard
+dom-module#d4l-twibbyn-details
   style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
   style(include="shared-styles")
   style(include="shared-layout-styles").
@@ -39,12 +37,12 @@ dom-module#d4l-dashboard
     }
 
     .page-sidebar:not([mobile]) {
-      width: 33%;
+      width: 25%;
       padding-right: 30px;
       box-sizing: border-box;
     }
     .page-content:not([mobile]) {
-      width: 66%;
+      width: 75%;
     }
 
     #uploader {
@@ -74,32 +72,32 @@ dom-module#d4l-dashboard
     d4l-header(
       auth="[[auth]]",
       db="{{db}}",
-      page="Dashboard",
-      page-title="Dashboard for Labour Admin",
+      page="Twibbyn",
+      page-title="Twibbyn for Labour",
       header="{{header}}",
     )
 
-    .layout.horizontal.wrap
-      .page-sidebar(mobile$="[[isMobile]]")
-        .layout.horizontal.wrap.card-group
-            d4l-dashboard-card-members.card.flex
+    h1 [[twibbyn.name]]
 
-      .page-content(mobile$="[[isMobile]]")
-        .layout.horizontal.wrap.card-group
-          d4l-dashboard-card-constituency.card.flex(auth="[[auth]]")
+    //.layout.horizontal.wrap
+    //  .page-sidebar(mobile$="[[isMobile]]")
+    //    .layout.horizontal.wrap.card-group
+    //      d4l-dashboard-card.card.flex
+    //
+    //  .page-content(mobile$="[[isMobile]]")
+    //    .layout.horizontal.wrap.card-group
+    //      d4l-dashboard-card.card.flex
+    //
+    //  .page-content(mobile$="[[isMobile]]")
+    //    .layout.horizontal.wrap.card-group
+    //      d4l-dashboard-card.card.flex(mobile$="[[isMobile]]")
 
-      .page-sidebar(mobile$="[[isMobile]]")
-        .layout.horizontal.wrap.card-group
-          d4l-dashboard-card-twibbyn.card.flex
-
-      .page-content(mobile$="[[isMobile]]")
-        .layout.horizontal.wrap.card-group
-          d4l-dashboard-card-thunderclap.card.flex(mobile$="[[isMobile]]")
-          d4l-dashboard-card-meme.card.flex(mobile$="[[isMobile]]")
+    template(is="dom-repeat", items="[[metadata.images]]", as="image")
+      img(src="/uploads/[[image]]")
 
     .layout.horizontal
       form(is="iron-form")
         paper-input
-        bwt-uploader#uploader(target="/api/v1/image-upload", method="POST", placeholder="", accepted-file-types="image/png")
+        bwt-uploader#uploader(target="/api/v1/image-upload", method="POST", body="{{__uploadResponse}}", placeholder="", accepted-file-types="image/png")
 
-  script(src="d4l-dashboard.js")
+  script(src="d4l-twibbyn-details.js")

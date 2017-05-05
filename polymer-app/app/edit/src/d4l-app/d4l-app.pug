@@ -81,15 +81,6 @@ dom-module#d4l-app
       pattern="/:id",
       data="{{subrouteActionIdData}}"
     )
-    d4l-socket-io#chat(
-      auth="[[auth]]",
-      endpoint="{{io.endpoint}}",
-      connected="{{io.connected}}",
-      tx="{{io.tx}}",
-      rx-events="{{io.rxEvents}}",
-      rx="{{io.rx}}",
-      on-rx-event="__rxEvent"
-    )
     d4l-socket-io#db(
       auth="[[auth]]",
       endpoint="{{iodb.endpoint}}",
@@ -123,14 +114,25 @@ dom-module#d4l-app
           role="main"
           mobile$="[[isMobile]]"
           on-toggle-nav-drawer="__toggleNavDrawer",
-          on-toggle-chat-drawer="__toggleChatDrawer"
         )
           d4l-dashboard(
             name="dashboard",
             title="Dashboard For Labour",
             auth="[[auth]]",
-            doc="{{db.post}}",
             db="{{db}}",
+            mobile="[[isMobile]]"
+          )
+          d4l-twibbyn(
+            name="twibbyn",
+            auth="[[auth]]",
+            doc="{{db.campaign}}",
+            db="{{db}}",
+            page-mode="{{pageMode}}",
+            page-first-load="[[pageFirstLoad]]",
+            route="{{route}}",
+            route-data="{{routeData}}",
+            subroute="{{subroute}}",
+            subroute-data="{{subrouteData}}",
             mobile="[[isMobile]]"
           )
           d4l-view404(

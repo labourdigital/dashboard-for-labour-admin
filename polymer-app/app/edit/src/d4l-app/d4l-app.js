@@ -30,28 +30,11 @@ Polymer({
       type: Object,
       notify: true
     },
-    io: {
-      type: Object,
-      value: function() {
-        return {
-          endpoint: '',
-          connected: false,
-          tx: [],
-          rxEvents: [
-            'add-user',
-            'message',
-            'chat',
-            'rm-user'
-          ],
-          rx: []
-        };
-      }
-    },
     iodb: {
       type: Object,
       value: function() {
         return {
-          endpoint: '',
+          endpoint: 'http://dev.rhizome.com',
           connected: false,
           rxEvents: [
             'db-activity'
@@ -146,14 +129,6 @@ Polymer({
   __dbConnected: function(connected) {
     this.__debug(`db: connected: ${connected}`);
   },
-  __ioConnected: function(connected) {
-    this.__debug(`io: connected: ${connected}`);
-    if (connected !== true) {
-      return;
-    }
-
-    this.push('io.tx', {type: 'add-user', payload: {userId: this.get('auth.user.id')}});
-  },
   __dbRxEvent: function(ev) {
     let authUser = this.get('auth.user');
     if (!authUser) {
@@ -161,49 +136,6 @@ Polymer({
     }
 
     this.__handleRxEvent(ev, authUser);
-  },
-  __rxEvent: function(ev) {
-    let type = ev.detail.type;
-    let payload = ev.detail.payload;
-    if (payload.userId === this.get('auth.user.id')) {
-      return;
-    }
-    this.__debug(`receiving message: ${type}`);
-    this.__debug(payload);
-
-    let user = this.db.user.data.find(u => u.id == payload.userId);
-    switch (type) {
-      default: {
-        this.__err(new Error('SocketIO: Unhandled message type'));
-      } break;
-      case 'chat': {
-        if (this.chats.length > 0) {
-          this.push('chats.0.messages', {
-            user: user,
-            text: payload.text,
-            timestamp: payload.timestamp,
-          });
-        }
-      } break;
-      case 'message': {
-      } break;
-      case 'add-user': {
-        if (user && user.person) {
-          this.fire('create-action-toast', {
-            label: '',
-            text: `${user.person.name} just connected...`
-          });
-        }
-      } break;
-      case 'rm-user': {
-        if (user && user.person) {
-          this.fire('create-action-toast', {
-            label: '',
-            text: `${user.person.name} just left...`
-          });
-        }
-      } break;
-    }
   },
   __dataServiceError: function(ev) {
     this.__silly(ev);
