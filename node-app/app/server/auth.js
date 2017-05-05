@@ -49,7 +49,8 @@ module.exports.init = app => {
             permissions: [
               {route: "user/*", permission: "*"},
               {route: "person/*", permission: "*"},
-              {route: "post/*", permission: "*"}
+              {route: "post/*", permission: "*"},
+              {route: "campaign/*", permission: "*"}
             ]
           };
           user.orgRole = authenticated.orgRole;
