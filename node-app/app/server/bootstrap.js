@@ -14,14 +14,14 @@ const Config = require('./config');
 const Rhizome = require('rhizome-api-js');
 const Auth = require('./auth');
 const Cache = require('./cache');
-const Logging = require('./logging');
+const Uploads = require('./uploads');
+const Users = require('./users');
 
 /* ************************************************************
  *
  * BOOTSTRAP
  *
  **************************************************************/
-
 const _installApp = app => {
   Rhizome.init({
     rhizomeUrl: Config.auth.rhizome.url,
@@ -30,9 +30,10 @@ const _installApp = app => {
 
   Cache.Manager.create(Cache.Constants.Type.TEAM);
   Auth.init(app);
+  Users.init(app);
 
   const tasks = [
-    Rhizome.User.getAll().then(Logging.Promise.logDebug('Users'))
+    Uploads.init(app)
   ];
 
   return Promise.all(tasks);
