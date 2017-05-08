@@ -12,6 +12,10 @@ Polymer({
     auth: {
       type: Object
     },
+    __pageTitle: {
+      type: String,
+      value: 'Twibbyn for Labour'
+    },
     __twibbynIndices: {
       type: Array,
       value: function() { return []; }
@@ -28,6 +32,7 @@ Polymer({
     this.push('db.campaign.data', {
       name: 'Twibbyn Campaign',
       type: 'twibbyn',
+      status: 'pending',
       ownerId: this.get('auth.user.id')
     });
     this.__twibbynIndices.push(this.get('db.contract.data.length')-1);
