@@ -41,10 +41,9 @@ class Users {
           users.forEach(u => {
             let found = data.find(user => user.email === u.auth[0].email);
             if (found) {
-              console.log(found);
               let updates = [];
 
-              if (u.teamName !== found.teamName) {
+              if (u.teamName != found.teamName) { // eslint-disable-line eqeqeq
                 updates.push({
                   path: 'teamName',
                   value: found.teamName
@@ -57,9 +56,8 @@ class Users {
                 });
               }
 
-              console.log(updates);
-
               if (updates.length) {
+                Logging.log(updates);
                 t.push(__updateUser(u.id, updates));
               }
             }
