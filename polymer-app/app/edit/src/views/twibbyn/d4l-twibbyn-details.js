@@ -20,6 +20,14 @@ Polymer({
       observer: '__twibbynChanged',
       notify: true
     },
+    __statusDescription: {
+      type: String,
+      computed: '__computeStatusDescription(twibbyn.status)'
+    },
+    __published: {
+      type: Boolean,
+      computed: '__computePublished(twibbyn.status)'
+    },
     __openEditDialog: {
       type: Boolean,
       value: false
@@ -67,6 +75,14 @@ Polymer({
     this.linkPaths('metadata', `db.campaign.metadata.${twibbyn.id}`);
   },
 
+  __publish: function() {
+    this.set('twibbyn.status', 'published');
+  },
+
+  __unpublish: function() {
+    this.set('twibbyn.status', 'pending');
+  },
+
   __editTwibbyn: function() {
     this.__edit.title = this.get('twibbyn.name');
     this.__edit.description = this.get('twibbyn.description');
@@ -95,6 +111,17 @@ Polymer({
     if (images.indexOf(response) === -1) {
       this.push('metadata.images', response);
     }
-  }
+  },
 
+  __computeStatusDescription(status) {
+    if (status !== 'published') {
+      return 'Not published yet.';
+    }
+
+    return 'Published';
+  },
+
+  __computePublished(status) {
+    return status === 'published';
+  }
 });

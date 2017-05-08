@@ -198,6 +198,10 @@ dom-module#d4l-twibbyn-details
       h1 [[twibbyn.name]]
       paper-icon-button(icon="d4l-icons:edit-circle", on-tap="__editTwibbyn")
     p [[twibbyn.description]]
+    h2 Status
+    p [[__statusDescription]]
+    paper-button(hidden$="[[__published]]", on-tap="__publish") Publish
+    paper-button(hidden$="[[!__published]]", on-tap="__unpublish") Unpublish
 
     h2 Images
     template(is="dom-if", if="[[!metadata.images.length]]")
