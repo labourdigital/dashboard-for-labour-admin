@@ -20,6 +20,19 @@ Polymer({
       observer: '__twibbynChanged',
       notify: true
     },
+    __openEditDialog: {
+      type: Boolean,
+      value: false
+    },
+    __edit: {
+      type: Object,
+      value: function() {
+        return {
+          title: '',
+          description: ''
+        }
+      }
+    },
     metadata: {
       type: Object,
       notify: true
@@ -54,13 +67,30 @@ Polymer({
     this.linkPaths('metadata', `db.campaign.metadata.${twibbyn.id}`);
   },
 
+  __editTwibbyn: function() {
+    this.__edit.title = this.get('twibbyn.name');
+    this.__edit.description = this.get('twibbyn.description');
+    this.__openEditDialog = true;
+  },
+
+  __saveTwibbyn: function(ev) {
+    this.__debug(ev.detail.item);
+    this.set('twibbyn.name', ev.detail.item.title);
+    this.set('twibbyn.description', ev.detail.item.description);
+  },
+
+  __removeImage: function(ev) {
+    this.__debug(ev.model.get('index'));
+    this.__debug(this.get(['metadata.images',ev.model.get('index')]));
+    this.splice('metadata.images', ev.model.get('index'), 1);
+  },
+
   __onUploadResponse: function(response) {
-    this.__debug(response);
     if (!response) {
-      this.__warn('Invalid response', response);
+      // this.__warn('Invalid response', response);
       return;
     }
-
+    this.__debug(response);
     let images = this.get('metadata.images');
     if (images.indexOf(response) === -1) {
       this.push('metadata.images', response);
