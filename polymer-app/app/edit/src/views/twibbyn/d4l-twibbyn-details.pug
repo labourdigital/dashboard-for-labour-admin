@@ -21,9 +21,124 @@ link(rel="import", href="/src/shared-styles.html")
 
 script(src="/bower_components/sugar/dist/sugar.min.js")
 
+dom-module#d4l-twibbyn-dialog
+  template
+    style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment")
+    style(include="d4l-dialog-styles").
+      :host{
+      }
+
+      .dialog-body:not([mobile]) {
+        width: 400px;
+      }
+      .dialog-body[mobile] {
+        width: 75vw;
+      }
+
+    iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
+    paper-dialog#dialog(on-iron-overlay-closed="__dialogClosed", with-backdrop)
+      .dialog-header
+        .layout.horizontal.center
+          h2 {{__title}}
+          .flex
+          paper-icon-button#close(icon="d4l-icons:close", on-click="__closeDialog")
+
+      form#form(is="iron-form", on-change="__formChanged", on-iron-form-presubmit="__formPresubmit")
+        .dialog-body(mobile$="[[isMobile]]")
+          paper-input(label="Title", value="{{__item.title}}", error-message="A title is required", required, auto-validate)
+          paper-input(label="Description", value="{{__item.description}}")
+
+        .dialog-footer
+          .layout.horizontal.center
+            button.no-style(type="submit")
+              paper-button#submit(autofocus) [[__action]]
+
+  script.
+    Polymer({
+      is: 'd4l-twibbyn-dialog',
+      behaviors: [Polymer.D4LLogging, Polymer.D4LFormDialog],
+      properties: {
+        logLevel: {
+          type: Number,
+          value: 4
+        },
+        name: {
+          value: 'Twibbyn'
+        }
+      }
+    });
+
+dom-module#d4l-twibbyn-img
+  template
+    style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
+    style(include="shared-styles").
+      :host {
+      }
+      .container {
+        display: inline-block;
+        width: 200px;
+      }
+
+      .footer {
+        position: relative;
+        top: -40px;
+      }
+
+    .container
+      img(src="[[__imageUrl]]", width="200", height="200")
+      .footer(hidden$="[[!__showButtons]]")
+        .layout.horizontal.center-center
+          paper-icon-button(icon="d4l-icons:delete-circle", on-tap="__rmImage")
+
+  script.
+    Polymer({
+      is: 'd4l-twibbyn-img',
+      properties: {
+        image: {
+          type: String,
+          value: ''
+        },
+        index: {
+          type: Number
+        },
+        __showButtons: {
+          type: Boolean,
+          value: false
+        },
+        __imageUrl: {
+          type: String,
+          computed: '__computeImageUrl(image)'
+        }
+      },
+      listeners: {
+        'mouseenter': '__mouseEnter',
+        'mouseleave': '__mouseLeave',
+        'tap': '__tap'
+      },
+
+      __mouseEnter: function (ev) {
+        this.__showButtons = true;
+      },
+      __mouseLeave: function (ev) {
+        this.__showButtons = false;
+      },
+      __tap: function (ev) {
+        this.__showButtons = !this.__showButtons;
+      },
+      __rmImage: function() {
+        this.fire('remove');
+      },
+
+      __computeImageUrl: function(image) {
+        return `http://cdn.forlabour.com/${image}`;
+      }
+    });
+
+
 dom-module#d4l-twibbyn-details
   style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
   style(include="shared-styles")
+  style(include="shared-detail-styles").
   style(include="shared-layout-styles").
     :host {
       display: block;
@@ -69,35 +184,29 @@ dom-module#d4l-twibbyn-details
   template
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
-    d4l-header(
-      auth="[[auth]]",
-      db="{{db}}",
-      page="Twibbyn",
-      page-title="Twibbyn for Labour",
-      header="{{header}}",
+    d4l-twibbyn-dialog#twibbynDialog(
+      open="{{__openEditDialog}}",
+      item="[[__edit]]",
+      index="0",
+      on-update="__saveTwibbyn"
+    )
+    d4l-twibbyn-dialog(
+
     )
 
-    h1 [[twibbyn.name]]
+    .layout.horizontal.center
+      h1 [[twibbyn.name]]
+      paper-icon-button(icon="d4l-icons:edit-circle", on-tap="__editTwibbyn")
+    p [[twibbyn.description]]
 
-    //.layout.horizontal.wrap
-    //  .page-sidebar(mobile$="[[isMobile]]")
-    //    .layout.horizontal.wrap.card-group
-    //      d4l-dashboard-card.card.flex
-    //
-    //  .page-content(mobile$="[[isMobile]]")
-    //    .layout.horizontal.wrap.card-group
-    //      d4l-dashboard-card.card.flex
-    //
-    //  .page-content(mobile$="[[isMobile]]")
-    //    .layout.horizontal.wrap.card-group
-    //      d4l-dashboard-card.card.flex(mobile$="[[isMobile]]")
-
+    h2 Images
+    template(is="dom-if", if="[[!metadata.images.length]]")
+      p No images yet. Upload some!
     template(is="dom-repeat", items="[[metadata.images]]", as="image")
-      img(src="/uploads/[[image]]")
+      d4l-twibbyn-img(image="[[image]]", index="[[$index]]", on-remove="__removeImage")
 
-    .layout.horizontal
-      form(is="iron-form")
-        paper-input
-        bwt-uploader#uploader(target="/api/v1/image-upload", method="POST", body="{{__uploadResponse}}", placeholder="", accepted-file-types="image/png")
+    h2 Add Image
+    hr
+    bwt-uploader#uploader(target="/api/v1/image-upload", method="POST", body="{{__uploadResponse}}", placeholder="", accepted-file-types="image/png")
 
   script(src="d4l-twibbyn-details.js")
