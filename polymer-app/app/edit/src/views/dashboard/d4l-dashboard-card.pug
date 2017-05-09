@@ -1,0 +1,166 @@
+link(rel="import", href="/bower_components/polymer/polymer.html")
+
+link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+
+link(rel="import", href="/src/d4l-theme.html")
+link(rel="import", href="/src/shared-styles.html")
+
+dom-module#d4l-dashboard-card-members
+  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment")
+  style(include="shared-styles")
+  style(include="shared-card-styles").
+    :host {
+      display: block;
+    }
+
+  template
+    .card
+      h1 Members
+
+  script.
+    Polymer({
+      is: 'd4l-dashboard-card-members',
+      behaviors: [
+        Polymer.D4LLogging
+      ],
+      properties: {
+        logLevel: {
+          type: Number,
+          value: 3
+        }
+      }
+    });
+
+dom-module#d4l-dashboard-card-constituency
+  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment")
+  style(include="shared-styles")
+  style(include="shared-card-styles").
+    :host {
+      display: block;
+    }
+
+  template
+    .card
+      h1 [[__constituencyTitle]]
+
+  script.
+    Polymer({
+      is: 'd4l-dashboard-card-constituency',
+      behaviors: [
+        Polymer.D4LLogging
+      ],
+      properties: {
+        logLevel: {
+          type: Number,
+          value: 4
+        },
+        auth: {
+          type: Object
+        },
+        __constituencyTitle: {
+          type: String,
+          computed: '__computeConstituencyTitle(auth.user)'
+        }
+      },
+
+      __computeConstituencyTitle: function(user) {
+        this.__debug(user);
+
+        const _map = {
+          460: 'Preston',
+          350: 'Lancaster and Fleetwood'
+        };
+
+        return user.teamName === 'national' ? 'National Campaign' : `${_map[user.teamName]} Campaign`
+      }
+    });
+
+dom-module#d4l-dashboard-card-twibbyn
+  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment")
+  style(include="shared-styles")
+  style(include="shared-card-styles").
+    :host {
+      display: block;
+    }
+
+  template
+    .card
+      h1 Twibbyns
+      p Add or edit Twibbyn campaigns
+
+      a(href="/twibbyn")
+        paper-button() Edit
+
+  script.
+    Polymer({
+      is: 'd4l-dashboard-card-twibbyn',
+      behaviors: [
+        Polymer.D4LLogging
+      ],
+      properties: {
+        logLevel: {
+          type: Number,
+          value: 3
+        }
+      }
+    });
+
+dom-module#d4l-dashboard-card-thunderclap
+  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment")
+  style(include="shared-styles")
+  style(include="shared-card-styles").
+    :host {
+      display: block;
+    }
+
+  template
+    .card
+      h1 Thunderclap
+      p Add new messages or edit existing Thunderclaps.
+
+      a(href="/thunderclap")
+        paper-button() Edit
+
+  script.
+    Polymer({
+      is: 'd4l-dashboard-card-thunderclap',
+      behaviors: [
+        Polymer.D4LLogging
+      ],
+      properties: {
+        logLevel: {
+          type: Number,
+          value: 3
+        }
+      }
+    });
+
+dom-module#d4l-dashboard-card-meme
+  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment")
+  style(include="shared-styles")
+  style(include="shared-card-styles").
+    :host {
+      display: block;
+    }
+
+  template
+    .card
+      h1 Memes
+      p Add new or edit existing memes.
+
+      a(href="/thunderclap")
+        paper-button() Edit
+
+  script.
+    Polymer({
+      is: 'd4l-dashboard-card-meme',
+      behaviors: [
+        Polymer.D4LLogging
+      ],
+      properties: {
+        logLevel: {
+          type: Number,
+          value: 3
+        }
+      }
+    });
