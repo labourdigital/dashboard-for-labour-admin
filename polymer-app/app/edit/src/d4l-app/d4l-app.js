@@ -34,7 +34,7 @@ Polymer({
       type: Object,
       value: function() {
         return {
-          endpoint: 'http://dev.rhizome.com',
+          endpoint: 'http://rhizome.codersforlabour.com',
           connected: false,
           rxEvents: [
             'db-activity'
