@@ -65,6 +65,9 @@ dom-module#d4l-dashboard-card-constituency
 
       __computeConstituencyTitle: function(user) {
         this.__debug(user);
+        if (!user) {
+          return '';
+        }
 
         const _map = {
           460: 'Preston',
