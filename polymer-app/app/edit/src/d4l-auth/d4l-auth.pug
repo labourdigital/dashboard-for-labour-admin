@@ -76,6 +76,10 @@ dom-module#d4l-auth
         height: 100vh;
       }
 
+      .login-group {
+        cursor: pointer;
+      }
+
       .footer-group {
         position: fixed;
         bottom: 10px;
@@ -88,10 +92,11 @@ dom-module#d4l-auth
         text-align: right;
       }
     .page-group.layout.horizontal.center-justified
-      .layout.vertical.center-center(on-click="login")
+      .layout.vertical.center-center
         iron-image(src="/images/logo-icon.svg", width="175", height="175")
+
         h1 Dashboard for Labour
-        .layout.horizontal
+        .layout.horizontal.center.login-group(on-click="login")
           p Login with Google
 
     .page-background
