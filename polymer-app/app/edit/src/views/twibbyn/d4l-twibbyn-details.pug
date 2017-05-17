@@ -13,6 +13,8 @@ link(rel="import", href="/bower_components/bwt-uploader/bwt-uploader.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
+link(rel="import", href="/src/d4l-campaign/d4l-campaign-behavior.html")
+link(rel="import", href="/src/d4l-campaign/d4l-campaign-img.html")
 
 link(rel="import", href="/src/d4l-header/d4l-header.html")
 
@@ -67,73 +69,6 @@ dom-module#d4l-twibbyn-dialog
         }
       }
     });
-
-dom-module#d4l-twibbyn-img
-  template
-    style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
-    style(include="shared-styles").
-      :host {
-      }
-      .container {
-        display: inline-block;
-        width: 200px;
-      }
-
-      .footer {
-        position: relative;
-        top: -40px;
-      }
-
-    .container
-      img(src="[[__imageUrl]]", width="200", height="200")
-      .footer(hidden$="[[!__showButtons]]")
-        .layout.horizontal.center-center
-          paper-icon-button(icon="d4l-icons:delete-circle", on-tap="__rmImage")
-
-  script.
-    Polymer({
-      is: 'd4l-twibbyn-img',
-      properties: {
-        image: {
-          type: String,
-          value: ''
-        },
-        index: {
-          type: Number
-        },
-        __showButtons: {
-          type: Boolean,
-          value: false
-        },
-        __imageUrl: {
-          type: String,
-          computed: '__computeImageUrl(image)'
-        }
-      },
-      listeners: {
-        'mouseenter': '__mouseEnter',
-        'mouseleave': '__mouseLeave',
-        'tap': '__tap'
-      },
-
-      __mouseEnter: function (ev) {
-        this.__showButtons = true;
-      },
-      __mouseLeave: function (ev) {
-        this.__showButtons = false;
-      },
-      __tap: function (ev) {
-        this.__showButtons = !this.__showButtons;
-      },
-      __rmImage: function() {
-        this.fire('remove');
-      },
-
-      __computeImageUrl: function(image) {
-        return `http://cdn.forlabour.com/${image}`;
-      }
-    });
-
 
 dom-module#d4l-twibbyn-details
   style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
@@ -195,9 +130,9 @@ dom-module#d4l-twibbyn-details
     )
 
     .layout.horizontal.center
-      h1 [[twibbyn.name]]
+      h1 [[campaign.name]]
       paper-icon-button(icon="d4l-icons:edit-circle", on-tap="__editTwibbyn")
-    p [[twibbyn.description]]
+    p [[campaign.description]]
     h2 Status
     p [[__statusDescription]]
     paper-button(hidden$="[[__published]]", on-tap="__publish") Publish
@@ -207,7 +142,7 @@ dom-module#d4l-twibbyn-details
     template(is="dom-if", if="[[!metadata.images.length]]")
       p No images yet. Upload some!
     template(is="dom-repeat", items="[[metadata.images]]", as="image")
-      d4l-twibbyn-img(image="[[image]]", index="[[$index]]", on-remove="__removeImage")
+      d4l-campaign-img(image="[[image]]", index="[[$index]]", on-remove="__removeImage")
 
     h2 Add Image
     hr
