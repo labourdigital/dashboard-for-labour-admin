@@ -1,0 +1,194 @@
+link(rel="import", href="/bower_components/polymer/polymer.html")
+link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout.html")
+link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html")
+link(rel="import", href="/bower_components/iron-media-query/iron-media-query.html")
+link(rel="import", href="/bower_components/iron-form/iron-form.html")
+link(rel="import", href="/bower_components/iron-list/iron-list.html")
+link(rel="import", href="/bower_components/paper-fab/paper-fab.html")
+link(rel="import", href="/bower_components/paper-icon-button/paper-icon-button.html")
+link(rel="import", href="/bower_components/paper-spinner/paper-spinner.html")
+link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
+link(rel="import", href="/bower_components/iron-icons/iron-icons.html")
+link(rel="import", href="/bower_components/iron-pages/iron-pages.html")
+link(rel="import", href="/bower_components/bwt-uploader/bwt-uploader.html")
+
+link(rel="import", href="/src/d4l-app-db/d4l-app-db-query.html")
+link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
+
+link(rel="import", href="/src/d4l-header/d4l-header.html")
+link(rel="import", href="/src/d4l-empty-image/d4l-empty-image.html")
+link(rel="import", href="/src/d4l-campaign/d4l-campaign-behavior.html")
+link(rel="import", href="/src/views/thunderclap/d4l-thunderclap-details.html")
+
+link(rel="import", href="/src/d4l-theme.html")
+link(rel="import", href="/src/d4l-icons.html")
+link(rel="import", href="/src/shared-styles.html")
+
+script(src="/bower_components/sugar/dist/sugar.min.js")
+
+dom-module#d4l-thunderclap-card
+  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment")
+  style(include="shared-styles")
+  style(include="shared-card-styles").
+    :host {
+      display: block;
+
+      min-height: 100px;
+      cursor: pointer;
+    }
+
+    .card {
+      min-height: 100px;
+    }
+
+    .footer {
+      position: relative;
+      top: -50px;
+    }
+
+  template
+    .card
+      h1 [[thunderclap.name]]
+      p [[thunderclap.description]]
+
+    .footer(hidden$="[[!__showButtons]]")
+      .layout.horizontal.center
+        paper-icon-button(icon="d4l-icons:view-circle", on-tap="__viewThunderclap")
+
+  script.
+    Polymer({
+      is: 'd4l-thunderclap-card',
+      behaviors: [
+        Polymer.D4LLogging
+      ],
+      properties: {
+        logLevel: {
+          type: Number,
+          value: 4
+        },
+        thunderclap: {
+          type: Object
+        },
+        __showButtons: {
+          type: Boolean,
+          value: false
+        }
+      },
+      listeners: {
+        'mouseenter': '__mouseEnter',
+        'mouseleave': '__mouseLeave',
+        'tap': '__tap'
+      },
+      __mouseEnter: function(ev) {
+        this.__showButtons = true;
+      },
+      __mouseLeave: function(ev) {
+        this.__showButtons = false;
+      },
+      __tap: function(ev) {
+        this.__showButtons = !this.__showButtons;
+      },
+      __viewThunderclap: function() {
+        this.fire('view-entity', `/thunderclap/${this.thunderclap.id}`);
+      }
+
+    });
+
+dom-module#d4l-thunderclap
+  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
+  style(include="shared-styles")
+  style(include="shared-layout-styles").
+    :host {
+      display: block;
+
+      padding: var(--default-page-padding);
+      padding-top: 95px;
+    }
+
+    paper-fab {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+    }
+
+    .card {
+      display: inline-block;
+      margin-bottom: 30px;
+      margin-right: 30px;
+    }
+    .card.flex{
+      flex: none;
+      width: 100%;
+
+    }
+    .card.flex:not([mobile]) {
+      flex: 3;
+    }
+    .card-group > .card {
+
+    }
+    .card-group > .card:last-child {
+      margin-right: 0px;
+    }
+
+  template
+    iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
+
+    d4l-header(
+      auth="[[auth]]",
+      db="{{db}}",
+      page="Thunderclap",
+      page-title="[[__pageTitle]]",
+      page-mode="[[__pageMode]]",
+      header="{{header}}",
+    )
+
+    iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
+    d4l-app-db-query(db="[[db]]", doc="[[db.campaign]]", query="[[__campaignsQuery]]", find-all="{{__campaigns}}")
+
+    paper-dialog#rmItemDialog(on-iron-overlay-closed="__dialogClosed")
+      h2 Delete Thunderclap Campaign
+      p Are you sure?
+      .buttons
+        paper-button(dialog-dismiss) No
+        paper-button(dialog-confirm, autofocus, on-click="__rmItemConfirmed") Yes
+
+    iron-pages(
+      selected='[[__loadMode]]',
+      attr-for-selected='name',
+      role='loading')
+
+      .layout.horizontal.center.center-justified.auth-container(name="loading", style="height: 90vh;")
+        paper-spinner(active, alt="Loading data...", style="width: 64px; height: 64px;")
+      div(name="loaded")
+        iron-pages(
+        selected='[[__pageMode]]',
+        attr-for-selected='name',
+        role='loaded')
+
+          div(name="list", mobile$="[[isMobile]]")
+            template(is="dom-if", if="[[!__hasCampaigns]]")
+              d4l-empty-image(image="thunderclaps") It appears that there aren't any campaigns yet
+
+            template(is="dom-if", if="[[__hasCampaigns]]")
+              h2 Active
+              .layout.horizontal.wrap
+                template(is="dom-repeat", items="{{__campaigns}}")
+                  d4l-thunderclap-card.card.flex(
+                    db="[[db]]",
+                    thunderclap="[[item]]",
+                    on-view-thunderclap="__viewItem",
+                    mobile$="[[isMobile]]")
+
+            paper-fab(icon="add", on-click="__addThunderclap")
+
+          div(name="detail", mobile$="[[isMobile]]")
+            d4l-thunderclap-details(
+              auth="[[auth]]",
+              db="{{db}}",
+              campaign="{{__selectedItem}}",
+              header="[[header]]")
+
+
+  script(src="d4l-thunderclap.js")
