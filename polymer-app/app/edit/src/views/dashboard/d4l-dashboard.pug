@@ -97,9 +97,4 @@ dom-module#d4l-dashboard
           d4l-dashboard-card-thunderclap.card.flex(mobile$="[[isMobile]]")
           d4l-dashboard-card-meme.card.flex(mobile$="[[isMobile]]")
 
-    .layout.horizontal
-      form(is="iron-form")
-        paper-input
-        bwt-uploader#uploader(target="/api/v1/image-upload", method="POST", placeholder="", accepted-file-types="image/png")
-
   script(src="d4l-dashboard.js")
