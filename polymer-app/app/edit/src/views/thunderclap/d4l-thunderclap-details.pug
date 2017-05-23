@@ -13,17 +13,17 @@ link(rel="import", href="/bower_components/bwt-uploader/bwt-uploader.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
-link(rel="import", href="/src/d4l-campaign/d4l-campaign-behavior.html")
-link(rel="import", href="/src/d4l-campaign/d4l-campaign-img.html")
 
 link(rel="import", href="/src/d4l-header/d4l-header.html")
+link(rel="import", href="/src/d4l-campaign/d4l-campaign-behavior.html")
+link(rel="import", href="/src/d4l-campaign/d4l-campaign-img.html")
 
 link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/shared-styles.html")
 
 script(src="/bower_components/sugar/dist/sugar.min.js")
 
-dom-module#d4l-twibbyn-dialog
+dom-module#d4l-thunderclap-dialog
   template
     style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment")
     style(include="d4l-dialog-styles").
@@ -57,7 +57,7 @@ dom-module#d4l-twibbyn-dialog
 
   script.
     Polymer({
-      is: 'd4l-twibbyn-dialog',
+      is: 'd4l-thunderclap-dialog',
       behaviors: [Polymer.D4LLogging, Polymer.D4LFormDialog],
       properties: {
         logLevel: {
@@ -65,12 +65,12 @@ dom-module#d4l-twibbyn-dialog
           value: 4
         },
         name: {
-          value: 'Twibbyn'
+          value: 'Thunderclap'
         }
       }
     });
 
-dom-module#d4l-twibbyn-details
+dom-module#d4l-thunderclap-details
   style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
   style(include="shared-styles")
   style(include="shared-detail-styles").
@@ -119,33 +119,30 @@ dom-module#d4l-twibbyn-details
   template
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
-    d4l-twibbyn-dialog#twibbynDialog(
+    d4l-thunderclap-dialog#thunderclapDialog(
       open="{{__openEditDialog}}",
       item="[[__edit]]",
       index="0",
-      on-update="__saveTwibbyn"
-    )
-    d4l-twibbyn-dialog(
-
+      on-update="__saveCampaign"
     )
 
     .layout.horizontal.center
       h1 [[campaign.name]]
-      paper-icon-button(icon="d4l-icons:edit-circle", on-tap="__editTwibbyn")
+      paper-icon-button(icon="d4l-icons:edit-circle", on-tap="__editCampaign")
     p [[campaign.description]]
     h2 Status
     p [[__statusDescription]]
     paper-button(hidden$="[[__published]]", on-tap="__publish") Publish
     paper-button(hidden$="[[!__published]]", on-tap="__unpublish") Unpublish
 
-    h2 Images
-    template(is="dom-if", if="[[!metadata.images.length]]")
-      p No images yet. Upload some!
-    template(is="dom-repeat", items="[[metadata.images]]", as="image")
-      d4l-campaign-img(image="[[image]]", index="[[$index]]", on-remove="__removeImage")
+    h2 Featured Image
+    template(is="dom-if", if="[[!__featuredImage]]")
+      p No featured image yet. Upload one!
+    template(is="dom-if", if="[[__featuredImage]]")
+      d4l-campaign-img(image="[[__featuredImage]]", index="[[$index]]", on-remove="__removeImage")
 
-    h2 Add Image
+    h2 Upload
     hr
     bwt-uploader#uploader(target="/api/v1/image-upload", method="POST", body="{{__uploadResponse}}", placeholder="", accepted-file-types="image/png")
 
-  script(src="d4l-twibbyn-details.js")
+  script(src="d4l-thunderclap-details.js")

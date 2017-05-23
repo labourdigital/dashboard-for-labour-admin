@@ -1,5 +1,5 @@
 Polymer({
-  is: 'd4l-twibbyn-details',
+  is: 'd4l-thunderclap-details',
   behaviors: [
     Polymer.D4LLogging,
     Polymer.D4LCampaignDetails
@@ -9,14 +9,24 @@ Polymer({
       type: Number,
       value: 4
     },
+    type: {
+      type: String,
+      value: 'thunderclap'
+    },
     metaDefault: {
       type: Object,
       value: function() {
         return {
           __populate__: true,
-          images: []
+          featured: '',
+          date: '',
+          supporter: []
         };
       }
+    },
+    __statusDescription: {
+      type: String,
+      computed: '__computeStatusDescription(campaign.status)'
     },
     __openEditDialog: {
       type: Boolean,
@@ -36,6 +46,10 @@ Polymer({
       value: function() {
         return {};
       }
+    },
+    __featuredImage: {
+      type: String,
+      computed: '__computeFeaturedImage(metadata.*)'
     }
   },
 
@@ -43,22 +57,20 @@ Polymer({
     '__onUploadResponse(__uploadResponse.response)'
   ],
 
-  __editTwibbyn: function() {
+  __editCampaign: function() {
     this.__edit.title = this.get('campaign.name');
     this.__edit.description = this.get('campaign.description');
     this.__openEditDialog = true;
   },
 
-  __saveTwibbyn: function(ev) {
+  __saveCampaign: function(ev) {
     this.__debug(ev.detail.item);
     this.set('campaign.name', ev.detail.item.title);
     this.set('campaign.description', ev.detail.item.description);
   },
 
   __removeImage: function(ev) {
-    this.__debug(ev.model.get('index'));
-    this.__debug(this.get(['metadata.images',ev.model.get('index')]));
-    this.splice('metadata.images', ev.model.get('index'), 1);
+    this.set('metadata.featured', '');
   },
 
   __onUploadResponse: function(response) {
@@ -67,9 +79,10 @@ Polymer({
       return;
     }
     this.__debug(response);
-    let images = this.get('metadata.images');
-    if (images.indexOf(response) === -1) {
-      this.push('metadata.images', response);
-    }
+    this.set('metadata.featured', response);
+  },
+
+  __computeFeaturedImage: function() {
+    return this.get('metadata.featured');
   }
 });

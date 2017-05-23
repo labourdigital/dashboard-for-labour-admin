@@ -65,6 +65,9 @@ dom-module#d4l-dashboard-card-constituency
 
       __computeConstituencyTitle: function(user) {
         this.__debug(user);
+        if (!user) {
+          return '';
+        }
 
         const _map = {
           460: 'Preston',
@@ -148,7 +151,7 @@ dom-module#d4l-dashboard-card-meme
       h1 Memes
       p Add new or edit existing memes.
 
-      a(href="/thunderclap")
+      a(href="/meme")
         paper-button() Edit
 
   script.

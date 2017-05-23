@@ -1,5 +1,5 @@
 Polymer({
-  is: 'd4l-twibbyn',
+  is: 'd4l-thunderclap',
   behaviors: [
     Polymer.D4LLogging,
     Polymer.D4LViewList,
@@ -15,22 +15,25 @@ Polymer({
     },
     type: {
       type: String,
-      value: 'twibbyn'
+      value: 'thunderclap'
     },
     __pageTitle: {
       type: String,
-      value: 'Twibbyn for Labour'
+      value: 'Thunderclap for Labour'
     }
   },
 
-  __addTwibbyn: function() {
+  attached: function() {
+  },
+
+  __addThunderclap: function() {
     this.push('db.campaign.data', {
-      name: 'Twibbyn Campaign',
-      type: 'twibbyn',
+      name: 'Thunderclap Campaign',
+      type: 'thunderclap',
       status: 'unpublished',
       ownerId: this.get('auth.user.id')
     });
-    this.__twibbynIndices.push(this.get('db.campaign.data.length')-1);
-  }
 
+    this.__campaignIndices.push(this.get('db.campaign.data.length')-1);
+  }
 });

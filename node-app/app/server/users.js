@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * Businesswise CRM
+ * Dashboard for Labour Admin
  *
- * @file import/clients.js
+ * @file users.js
  * @description
  * @module System
  * @author Lighten

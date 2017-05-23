@@ -1,0 +1,74 @@
+link(rel="import", href="/bower_components/polymer/polymer.html")
+link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout.html")
+link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html")
+
+link(rel="import", href="/src/d4l-icons.html")
+link(rel="import", href="/src/d4l-theme.html")
+link(rel="import", href="/src/shared-styles.html")
+
+
+dom-module#d4l-campaign-img
+  template
+    style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
+    style(include="shared-styles").
+      :host {
+      }
+      .container {
+        display: inline-block;
+        width: 200px;
+      }
+
+      .footer {
+        position: relative;
+        top: -40px;
+      }
+
+    .container
+      img(src="[[__imageUrl]]", width="200")
+      .footer(hidden$="[[!__showButtons]]")
+        .layout.horizontal.center-center
+          paper-icon-button(icon="d4l-icons:delete-circle", on-tap="__rmImage")
+
+  script.
+    Polymer({
+      is: 'd4l-campaign-img',
+      properties: {
+        image: {
+          type: String,
+          value: ''
+        },
+        index: {
+          type: Number
+        },
+        __showButtons: {
+          type: Boolean,
+          value: false
+        },
+        __imageUrl: {
+          type: String,
+          computed: '__computeImageUrl(image)'
+        }
+      },
+      listeners: {
+        'mouseenter': '__mouseEnter',
+        'mouseleave': '__mouseLeave',
+        'tap': '__tap'
+      },
+
+      __mouseEnter: function (ev) {
+        this.__showButtons = true;
+      },
+      __mouseLeave: function (ev) {
+        this.__showButtons = false;
+      },
+      __tap: function (ev) {
+        this.__showButtons = !this.__showButtons;
+      },
+      __rmImage: function() {
+        this.fire('remove');
+      },
+
+      __computeImageUrl: function(image) {
+        return `http://cdn.forlabour.com/${image}`;
+      }
+    });

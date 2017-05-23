@@ -12,14 +12,14 @@ link(rel="import", href="/bower_components/iron-icons/iron-icons.html")
 link(rel="import", href="/bower_components/iron-pages/iron-pages.html")
 link(rel="import", href="/bower_components/bwt-uploader/bwt-uploader.html")
 
+link(rel="import", href="/src/d4l-app-db/d4l-app-db-query.html")
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
 
-link(rel="import", href="/src/d4l-app-db/d4l-app-db-query.html")
 link(rel="import", href="/src/d4l-header/d4l-header.html")
 link(rel="import", href="/src/d4l-empty-image/d4l-empty-image.html")
 link(rel="import", href="/src/d4l-campaign/d4l-campaign-behavior.html")
-link(rel="import", href="/src/views/twibbyn/d4l-twibbyn-details.html")
+link(rel="import", href="/src/views/meme/d4l-meme-details.html")
 
 link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/d4l-icons.html")
@@ -27,7 +27,7 @@ link(rel="import", href="/src/shared-styles.html")
 
 script(src="/bower_components/sugar/dist/sugar.min.js")
 
-dom-module#d4l-twibbyn-card
+dom-module#d4l-meme-card
   style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment")
   style(include="shared-styles")
   style(include="shared-card-styles").
@@ -49,16 +49,16 @@ dom-module#d4l-twibbyn-card
 
   template
     .card
-      h1 [[twibbyn.name]]
-      p [[twibbyn.description]]
+      h1 [[meme.name]]
+      p [[meme.description]]
 
     .footer(hidden$="[[!__showButtons]]")
       .layout.horizontal.center
-        paper-icon-button(icon="d4l-icons:view-circle", on-tap="__viewTwibbyn")
+        paper-icon-button(icon="d4l-icons:view-circle", on-tap="__viewMeme")
 
   script.
     Polymer({
-      is: 'd4l-twibbyn-card',
+      is: 'd4l-meme-card',
       behaviors: [
         Polymer.D4LLogging
       ],
@@ -67,7 +67,7 @@ dom-module#d4l-twibbyn-card
           type: Number,
           value: 4
         },
-        twibbyn: {
+        meme: {
           type: Object
         },
         __showButtons: {
@@ -89,13 +89,13 @@ dom-module#d4l-twibbyn-card
       __tap: function(ev) {
         this.__showButtons = !this.__showButtons;
       },
-      __viewTwibbyn: function() {
-        this.fire('view-entity', `/twibbyn/${this.twibbyn.id}`);
+      __viewMeme: function() {
+        this.fire('view-entity', `/meme/${this.meme.id}`);
       }
 
     });
 
-dom-module#d4l-twibbyn
+dom-module#d4l-meme
   style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
   style(include="shared-styles")
   style(include="shared-layout-styles").
@@ -138,7 +138,7 @@ dom-module#d4l-twibbyn
     d4l-header(
       auth="[[auth]]",
       db="{{db}}",
-      page="Twibbyn",
+      page="Thunderclap",
       page-title="[[__pageTitle]]",
       page-mode="[[__pageMode]]",
       header="{{header}}",
@@ -148,7 +148,7 @@ dom-module#d4l-twibbyn
     d4l-app-db-query(db="[[db]]", doc="[[db.campaign]]", query="[[__campaignsQuery]]", find-all="{{__campaigns}}")
 
     paper-dialog#rmItemDialog(on-iron-overlay-closed="__dialogClosed")
-      h2 Delete Twibbyn Campaign
+      h2 Delete Meme Campaign
       p Are you sure?
       .buttons
         paper-button(dialog-dismiss) No
@@ -169,26 +169,26 @@ dom-module#d4l-twibbyn
 
           div(name="list", mobile$="[[isMobile]]")
             template(is="dom-if", if="[[!__hasCampaigns]]")
-              d4l-empty-image(image="twibbyns") It appears that there aren't any campaigns yet
+              d4l-empty-image(image="memes") It appears that there aren't any campaigns yet
 
             template(is="dom-if", if="[[__hasCampaigns]]")
               h2 Active
               .layout.horizontal.wrap
                 template(is="dom-repeat", items="{{__campaigns}}")
-                  d4l-twibbyn-card.card.flex(
+                  d4l-meme-card.card.flex(
                     db="[[db]]",
-                    twibbyn="[[item]]",
-                    on-view-twibbyn="__viewItem",
+                    meme="[[item]]",
+                    on-view-meme="__viewItem",
                     mobile$="[[isMobile]]")
 
-            paper-fab(icon="add", on-click="__addTwibbyn")
+            paper-fab(icon="add", on-click="__addMeme")
 
           div(name="detail", mobile$="[[isMobile]]")
-            d4l-twibbyn-details(
+            d4l-meme-details(
               auth="[[auth]]",
               db="{{db}}",
               campaign="{{__selectedItem}}",
               header="[[header]]")
 
 
-  script(src="d4l-twibbyn.js")
+  script(src="d4l-meme.js")
