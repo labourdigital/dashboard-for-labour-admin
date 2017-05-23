@@ -19,6 +19,15 @@ Polymer({
       value: '',
       notify: true,
     },
+    priority: {
+      type: Number,
+      value: '99'
+    },
+    notLoaded: {
+      type: Boolean,
+      value: true,
+      reflectToAttribute: true
+    },
     route: {
       type: String,
       value: ''
@@ -83,19 +92,11 @@ Polymer({
     '__dataSplices(data.splices)',
     '__dataChanges(data.*)',
     '__metadataChanged(metadata.*)',
-    '__auth(route, auth.user)'
   ],
 
-  __auth: function() {
-    this.__silly(`data:${this.route}:${this.status}`);
 
-    if (!this.get('auth.user')) {
-      return;
-    }
-
-    if (this.status === "uninitialised") {
-      this.__generateListRequest();
-    }
+  triggerGet: function() {
+    this.__generateListRequest();
   },
 
   /**
@@ -139,7 +140,7 @@ Polymer({
       return;
     }
     if (/\.length$/.test(cr.path) === true
-        || this.readOnly) {
+      || this.readOnly) {
       return;
     }
 
@@ -505,6 +506,8 @@ Polymer({
   __ajaxListResponse: function(rq) {
     this.__internalChange__ = true;
     this.data = this.liveData = rq.response;
+    this.fire('data-service-list', this);
+    this.set('notLoaded', false);
   },
   __ajaxListMetadataResponse: function(rq) {
     // this.set(['metadata',rq.entityId], rq.response);
@@ -522,12 +525,14 @@ Polymer({
   },
 
   __ajaxAddResponse: function(rq) {
-    this.data.forEach((d, idx) => {
-      if (!d.id) {
-        this.data[idx].__readOnlyChange__ = true;
-        this.set(['data', idx, 'id'], rq.response.id);
+    let data = this.data;
+    for (let x=0; x<data.length; x++) {
+      if (!data[x].id) {
+        this.data[x].__readOnlyChange__ = true;
+        this.set(['data', x, 'id'], rq.response.id);
+        break;
       }
-    })
+    }
   },
 
   __ajaxUpdateResponse: function(rq) {
@@ -548,10 +553,20 @@ Polymer({
       if (base instanceof Array) {
         for (let x=0; x<base.length; x++) {
           if (!base[x].id) {
-            this.data[idx].__readOnlyChange__ = true;
-            this.__debug(['data', idx, rq.body.path, x, 'id']);
-            this.set(['data', idx, rq.body.path, x, 'id'], r.value.id);
-            break;
+            if (base[x].name !== undefined && r.value.name === base[x].name) {
+              this.__debug('Setting array item id using item name', r.value.id, r.value.name);
+              this.data[idx].__readOnlyChange__ = true;
+              this.__debug(['data', idx, rq.body.path, x, 'id']);
+              this.set(['data', idx, rq.body.path, x, 'id'], r.value.id);
+
+              break;
+            } else if (base[x].name === undefined) {
+              this.data[idx].__readOnlyChange__ = true;
+              this.__debug(['data', idx, rq.body.path, x, 'id']);
+              this.set(['data', idx, rq.body.path, x, 'id'], r.value.id);
+
+              break;
+            }
           }
         }
       }
