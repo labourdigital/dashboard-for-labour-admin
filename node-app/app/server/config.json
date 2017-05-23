@@ -89,14 +89,14 @@
     },
     "yubaba": {
       "logPath": {
-        "dev":"/home/chris/Work/Workspaces/WebStorm/d4la/node-app/logs/dev",
-        "prod":"/home/chris/Work/Workspaces/WebStorm/d4la/node-app/logs/prod",
-        "test":"/home/chris/Work/Workspaces/WebStorm/d4la/node-app/logs/test"
+        "dev":"/home/chris/apps/d4la/node-app/logs/dev",
+        "prod":"/home/chris/apps/d4la/node-app/logs/prod",
+        "test":"/home/chris/apps/d4la/node-app/logs/test"
       },
       "appDataPath": {
-        "dev": "/home/chris/Work/Workspaces/WebStorm/d4la/node-app/app_data",
-        "prod": "/home/chris/Work/Workspaces/WebStorm/d4la/node-app/app_data",
-        "test": "/home/chris/Work/Workspaces/WebStorm/d4la/node-app/app_data/test"
+        "dev": "/home/chris/apps/d4la/node-app/app_data",
+        "prod": "/home/chris/apps/d4la/node-app/app_data",
+        "test": "/home/chris/apps/d4la/node-app/app_data/test"
       },
       "listenPort": {
         "dev": 6021,
