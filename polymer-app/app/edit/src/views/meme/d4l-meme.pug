@@ -34,6 +34,7 @@ dom-module#d4l-meme-card
     :host {
       display: block;
 
+      margin: 10px;
       min-height: 100px;
       cursor: pointer;
     }
@@ -42,19 +43,24 @@ dom-module#d4l-meme-card
       min-height: 100px;
     }
 
-    .footer {
-      position: relative;
-      top: -50px;
+    .footer.tray {
+      margin: 10px -20px -10px;
     }
+
+    .footer.tray paper-icon-button {
+      color: var(--app-color-secondary-grey);
+    }
+
 
   template
     .card
       h1 [[meme.name]]
       p [[meme.description]]
 
-    .footer(hidden$="[[!__showButtons]]")
-      .layout.horizontal.center
-        paper-icon-button(icon="d4l-icons:view-circle", on-tap="__viewMeme")
+
+      .footer.tray(hidden$="[[!__showButtons]]")
+        .layout.horizontal.center
+          paper-icon-button(icon="d4l-icons:add-circle", on-tap="__viewMeme")
 
   script.
     Polymer({
