@@ -2,12 +2,13 @@ link(rel="import", href="/bower_components/polymer/polymer.html")
 link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout.html")
 link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html")
 
+link(rel="import", href="/src/d4l-app-db/d4l-app-db-query.html")
 link(rel="import", href="/src/d4l-icons.html")
 link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/shared-styles.html")
 
 
-dom-module#d4l-campaign-img
+dom-module#d4l-user-img
   template
     style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
     style(include="shared-styles")
@@ -29,19 +30,27 @@ dom-module#d4l-campaign-img
       }
 
 
+    d4l-app-db-query(db="[[db]]", doc="[[db.user]]", query="[[__ownerUserQuery]]", find-one="{{__ownerUser}}")
+
     .card
       img(src="[[__imageUrl]]", width="200")
+
+      h1 [[__imgOwner]]
+      p [[post.text]]
+
+
       .footer.tray(hidden$="[[!__showButtons]]")
         .layout.horizontal.center-center
-          paper-icon-button(icon="d4l-icons:delete-circle", on-tap="__rmImage")
+          paper-icon-button(icon="d4l-icons:add-circle", on-tap="__addImage")
 
   script.
     Polymer({
-      is: 'd4l-campaign-img',
+      is: 'd4l-user-img',
+      behaviors: [Polymer.D4LLogging],
       properties: {
-        image: {
-          type: String,
-          value: ''
+        post: {
+          type: Object,
+          value: null
         },
         index: {
           type: Number
@@ -50,9 +59,21 @@ dom-module#d4l-campaign-img
           type: Boolean,
           value: false
         },
+        __ownerUser: {
+          type: Object,
+          value: null
+        },
+        __ownerUserQuery: {
+          type: Object,
+          computed: '__computeOwnerUserQuery(post.ownerId)'
+        },
+        __imgOwner: {
+          type: String,
+          computed: '__computeImgOwner(__ownerUser)'
+        },
         __imageUrl: {
           type: String,
-          computed: '__computeImageUrl(image)'
+          computed: '__computeImageUrl(post.image)'
         }
       },
       listeners: {
@@ -70,11 +91,29 @@ dom-module#d4l-campaign-img
       __tap: function (ev) {
         this.__showButtons = !this.__showButtons;
       },
-      __rmImage: function() {
-        this.fire('remove');
+      __addImage: function() {
+        this.fire('add');
       },
 
       __computeImageUrl: function(image) {
-        return `http://cdn.forlabour.com/${image}`;
+        return `http://cdn.forlabour.com/u/${image}`;
+      },
+
+      __computeOwnerUserQuery: function(userId) {
+        this.__debug(userId);
+        return {
+          id: {
+            $eq: userId
+          }
+        };
+      },
+
+      __computeImgOwner: function(owner) {
+        this.__debug(owner);
+        if (!owner) {
+          return '';
+        }
+
+        return owner.person.formalName;
       }
     });

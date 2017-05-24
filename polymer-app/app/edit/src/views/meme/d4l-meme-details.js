@@ -9,6 +9,10 @@ Polymer({
       type: Number,
       value: 4
     },
+    db: {
+      type: Object,
+      notify: true
+    },
     type: {
       type: String,
       value: 'meme'
@@ -22,6 +26,10 @@ Polymer({
           shared: {}
         };
       }
+    },
+    __userImageTriageUrl: {
+      type: String,
+      value: 'http://cdn.forlabour.com/u/'
     },
     __statusDescription: {
       type: String,
@@ -80,5 +88,19 @@ Polymer({
     if (images.indexOf(response) === -1) {
       this.push('metadata.images', response);
     }
+  },
+
+  __addUserImage: function(ev) {
+    let post = ev.model.get('post');
+    let image = `u/${post.image}`;
+
+    let images = this.get('metadata.images');
+    if (images.indexOf(image) === -1) {
+      this.push('metadata.images', image);
+    }
+  },
+
+  filterNotBlank: function(post) {
+    return post.image ? true : false;
   }
 });

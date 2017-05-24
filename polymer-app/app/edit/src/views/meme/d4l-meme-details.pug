@@ -17,6 +17,7 @@ link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
 link(rel="import", href="/src/d4l-header/d4l-header.html")
 link(rel="import", href="/src/d4l-campaign/d4l-campaign-behavior.html")
 link(rel="import", href="/src/d4l-campaign/d4l-campaign-img.html")
+link(rel="import", href="/src/d4l-campaign/d4l-user-img.html")
 
 link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/shared-styles.html")
@@ -65,7 +66,7 @@ dom-module#d4l-meme-dialog
           value: 4
         },
         name: {
-          value: 'Thunderclap'
+          value: 'Meme'
         }
       }
     });
@@ -135,14 +136,21 @@ dom-module#d4l-meme-details
     paper-button(hidden$="[[__published]]", on-tap="__publish") Publish
     paper-button(hidden$="[[!__published]]", on-tap="__unpublish") Unpublish
 
-    h2 Images
+    h2 Included Images
     template(is="dom-if", if="[[!metadata.images.length]]")
       p No images yet. Upload some!
-    template(is="dom-repeat", items="[[metadata.images]]", as="image")
-      d4l-campaign-img(image="[[image]]", index="[[$index]]", on-remove="__removeImage")
+    .layout.horizontal.wrap.card-group
+      template(is="dom-repeat", items="[[metadata.images]]", as="image")
+        d4l-campaign-img.card(image="[[image]]", index="[[$index]]", on-remove="__removeImage")
 
-    h2 Add Image
+    h2 Add Images
     hr
-    bwt-uploader#uploader(target="/api/v1/image-upload", method="POST", body="{{__uploadResponse}}", placeholder="", accepted-file-types="image/png,image/jpg,image/jpeg,image/gif", max-file-size="5000")
+    h3 Upload
+    bwt-uploader#uploader(target="/api/v1/image-upload", method="POST", body="{{__uploadResponse}}", placeholder="", accepted-file-types="image/png,image/jpg,image/jpeg,image/gif", max-file-size="3000")
+    hr
+    h3 User Images
+    .layout.horizontal.wrap.card-group
+      template(is="dom-repeat", items="[[db.post.data]]", filter="filterNotBlank", as="post")
+        d4l-user-img.card(db="[[db]]", post="[[post]]", on-add="__addUserImage")
 
   script(src="d4l-meme-details.js")
