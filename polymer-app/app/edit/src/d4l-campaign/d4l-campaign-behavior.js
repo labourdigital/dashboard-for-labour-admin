@@ -137,9 +137,9 @@ Polymer.D4LCampaignDetails = {
     let meta = this.get(['db.campaign.metadata', campaign.id]);
     this.__debug('__campaignChanged', campaign.id, meta, this.metaDefault);
     if (!meta) {
-      this.set(['db.campaign.metadata', campaign.id], this.metaDefault);
+      this.set(['db.campaign.metadata', campaign.id], Object.assign({}, this.metaDefault));
     }
-    this.metadata = this.get(['db.campaign.metadata', campaign.id]);
+    this.set('metadata', this.get(['db.campaign.metadata', campaign.id]));
     this.linkPaths('metadata', `db.campaign.metadata.${campaign.id}`);
   },
 

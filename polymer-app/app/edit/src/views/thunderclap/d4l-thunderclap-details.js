@@ -69,7 +69,7 @@ Polymer({
     this.set('campaign.description', ev.detail.item.description);
   },
 
-  __removeImage: function(ev) {
+  __removeImage: function() {
     this.set('metadata.featured', '');
   },
 

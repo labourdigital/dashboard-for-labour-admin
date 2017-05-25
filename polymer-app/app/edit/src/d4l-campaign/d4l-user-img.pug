@@ -38,10 +38,10 @@ dom-module#d4l-user-img
       h1 [[__imgOwner]]
       p [[post.text]]
 
-
       .footer.tray(hidden$="[[!__showButtons]]")
         .layout.horizontal.center-center
           paper-icon-button(icon="d4l-icons:add-circle", on-tap="__addImage")
+          paper-icon-button(icon="d4l-icons:delete-circle", on-tap="__rmImage")
 
   script.
     Polymer({
@@ -93,6 +93,9 @@ dom-module#d4l-user-img
       },
       __addImage: function() {
         this.fire('add');
+      },
+      __rmImage: function() {
+        this.fire('remove');
       },
 
       __computeImageUrl: function(image) {
