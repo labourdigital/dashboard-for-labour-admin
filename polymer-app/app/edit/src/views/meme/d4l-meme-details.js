@@ -7,7 +7,7 @@ Polymer({
   properties: {
     logLevel: {
       type: Number,
-      value: 4
+      value: 3
     },
     db: {
       type: Object,
@@ -53,6 +53,10 @@ Polymer({
       value: function() {
         return {};
       }
+    },
+    __hasUserImages: {
+      type: Boolean,
+      computed: '__computeHasUserImages(db.post.data.*)'
     }
   },
 
@@ -97,10 +101,22 @@ Polymer({
     let images = this.get('metadata.images');
     if (images.indexOf(image) === -1) {
       this.push('metadata.images', image);
+      ev.model.set('post.tags', `${ev.model.get('post.tags')} consumed`);
     }
   },
 
-  filterNotBlank: function(post) {
-    return post.image ? true : false;
+  __rmUserImage: function(ev) {
+    let tags = ev.model.get('post.tags');
+    ev.model.set('post.tags', `${tags} deleted`);
+  },
+
+  __computeHasUserImages: function() {
+    let post = this.get('db.post.data').find(p => (!p.tags || p.tags === 'meme') && p.image);
+    this.__debug('__hasUserImages', post);
+    return post ? true : false;
+  },
+
+  filterNotBlank: function(p) {
+    return (!p.tags || p.tags === 'meme') && p.image;
   }
 });

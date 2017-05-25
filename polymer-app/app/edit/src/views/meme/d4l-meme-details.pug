@@ -149,8 +149,10 @@ dom-module#d4l-meme-details
     bwt-uploader#uploader(target="/api/v1/image-upload", method="POST", body="{{__uploadResponse}}", placeholder="", accepted-file-types="image/png,image/jpg,image/jpeg,image/gif", max-file-size="3000")
     hr
     h3 User Images
+    template(is="dom-if", if="[[!__hasUserImages]]")
+      p Currently there are no user images!
     .layout.horizontal.wrap.card-group
-      template(is="dom-repeat", items="[[db.post.data]]", filter="filterNotBlank", as="post")
-        d4l-user-img.card(db="[[db]]", post="[[post]]", on-add="__addUserImage")
+      template(is="dom-repeat", items="{{db.post.data}}", observe="tags image", filter="filterNotBlank", as="post")
+        d4l-user-img.card(db="[[db]]", post="[[post]]", on-add="__addUserImage", on-remove="__rmUserImage")
 
   script(src="d4l-meme-details.js")
