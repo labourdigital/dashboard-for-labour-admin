@@ -10,9 +10,13 @@
     "D4LA_RHIZOME_DEV_URL": "",
     "D4LA_RHIZOME_PROD_URL": "",
     "D4LA_RHIZOME_TEST_URL": "",
+    "D4LA_CDN_PROD_BUCKET": "",
+    "D4LA_CDN_DEV_BUCKET": "",
     "D4LA_GOOGLE_CLIENT_ID": "",
     "D4LA_GOOGLE_CLIENT_SECRET": "",
     "D4LA_SESSION_SECRET": "",
+    "D4LA_REDIS_PORT": "6397",
+    "D4LA_REDIS_HOST": "127.0.0.1",
     "D4LA_REDIS_URL": "redis://127.0.0.1:6397"
   },
   "global": {
@@ -53,8 +57,14 @@
       }
     },
     "redis": {
+      "url": "%D4LA_REDIS_URL%",
       "host": "%D4LA_REDIS_HOST%",
       "port": "%D4LA_REDIS_PORT%"
+    },
+    "cdnBucket": {
+      "dev": "%D4LA_CDN_DEV_BUCKET%",
+      "prod": "%D4LA_CDN_PROD_BUCKET%",
+      "test": "%D4LA_CDN_DEV_BUCKET%"
     }
   },
   "local": {
