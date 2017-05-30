@@ -75,6 +75,6 @@ dom-module#d4l-campaign-img
       },
 
       __computeImageUrl: function(image) {
-        return `http://cdn.forlabour.com/${image}`;
+        return `//%{D4LA_CDN_URL}%/${image}`;
       }
     });
