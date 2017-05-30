@@ -25,7 +25,7 @@
       "title": "Dashboard for Labour Admin",
       "description": "Application server for Dashboard for Labour Admin.",
       "code": "d4la",
-      "version": "1.2.0",
+      "version": "1.3.0",
       "protocol": "http",
       "subdomain": "admin.dashboard",
       "domain": "forlabour.com"
