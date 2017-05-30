@@ -13,8 +13,7 @@
     "D4LA_GOOGLE_CLIENT_ID": "",
     "D4LA_GOOGLE_CLIENT_SECRET": "",
     "D4LA_SESSION_SECRET": "",
-    "D4LA_REDIS_URL": "localhost",
-    "D4LA_REDIS_PORT": "6397"
+    "D4LA_REDIS_URL": "redis://127.0.0.1:6397"
   },
   "global": {
     "env": "%NODE_ENV%",

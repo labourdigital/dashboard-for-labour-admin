@@ -9,6 +9,8 @@ const pug = require('gulp-pug');
 const htmlPrettify = require('gulp-html-prettify');
 const bowerFiles = require('main-bower-files');
 const imagemin = require('gulp-imagemin');
+const babel = require('gulp-babel');
+const replace = require('gulp-replace');
 
 const Paths = {
   SOURCE: 'app/edit',
@@ -31,14 +33,51 @@ const Globs = {
   IMAGES: [`${Paths.SOURCE}/images/**/*.png`,`${Paths.SOURCE}/images/**/*.jpg`,`${Paths.SOURCE}/images/**/*.svg`,`${Paths.SOURCE}/images/**/*.gif`,`${Paths.SOURCE}/images/**/*.ico`]
 };
 
+const Environment = {
+  NODE_ENV: '',
+  D4LA_RHIZOME_DEV_URL: '',
+  D4LA_RHIZOME_PROD_URL: '',
+  D4LA_RHIZOME_TEST_URL: ''
+};
+
+for (let variable in Environment) {
+  if (!process.env[variable]) {
+    throw new Error(`You must specify the ${variable} environment variable`);
+  }
+  if (process.env[variable]) {
+    Environment[variable] = process.env[variable];
+  }
+}
+
+function environmentReplace(stream) {
+  switch (Environment.NODE_ENV) {
+    case 'production':
+      stream.pipe(replace('%{D4LA_RHIZOME_URL}%', Environment.D4LA_RHIZOME_PROD_URL));
+      break;
+    case 'development':
+      stream.pipe(replace('%{D4LA_RHIZOME_URL}%', Environment.D4LA_RHIZOME_DEV_URL));
+      break;
+    case 'test':
+      stream.pipe(replace('%{D4LA_RHIZOME_URL}%', Environment.D4LA_RHIZOME_DEV_URL));
+      break;
+  }
+
+  return stream;
+}
+
 //
 // Scripts
 //
 gulp.task('js', function() {
-  return gulp.src(Globs.SCRIPTS, {base: Paths.SOURCE})
-		.pipe(eslint())
-		.pipe(eslint.format())
-		.pipe(gulp.dest(Paths.DEST));
+  var content = gulp.src(Globs.SCRIPTS, {base: Paths.SOURCE})
+    .pipe(eslint())
+    .pipe(eslint.format());
+
+  return environmentReplace(content)
+    .pipe(babel({
+      presets: ['es2015']
+    }))
+    .pipe(gulp.dest(Paths.DEST));
 });
 
 gulp.task('scripts', function() {
@@ -50,14 +89,16 @@ gulp.task('scripts', function() {
 //
 gulp.task('html', function() {
   return gulp.src(Globs.HTML, {base: Paths.SOURCE})
-		.pipe(gulp.dest(Paths.DEST));
+    .pipe(gulp.dest(Paths.DEST));
 });
 
 gulp.task('pug', function() {
-  return gulp.src(Globs.PUG, {base: Paths.SOURCE})
-		.pipe(pug())
-    .pipe(htmlPrettify())
-		.pipe(gulp.dest(Paths.DEST));
+  var content = gulp.src(Globs.PUG, {base: Paths.SOURCE})
+    .pipe(pug())
+    .pipe(htmlPrettify());
+
+  return environmentReplace(content)
+    .pipe(gulp.dest(Paths.DEST));
 });
 
 gulp.task('markup', function() {
@@ -70,19 +111,19 @@ gulp.task('markup', function() {
 gulp.task('png', function() {
   return gulp.src(Globs.PNG)
     .pipe(imagemin())
-		.pipe(gulp.dest(Paths.DEST_IMAGES));
+    .pipe(gulp.dest(Paths.DEST_IMAGES));
 });
 
 gulp.task('jpg', function() {
   return gulp.src(Globs.JPG)
     .pipe(imagemin())
-		.pipe(gulp.dest(Paths.DEST_IMAGES));
+    .pipe(gulp.dest(Paths.DEST_IMAGES));
 });
 
 gulp.task('svg', function() {
   return gulp.src(Globs.SVG)
     .pipe(imagemin())
-		.pipe(gulp.dest(Paths.DEST_IMAGES));
+    .pipe(gulp.dest(Paths.DEST_IMAGES));
 });
 
 gulp.task('images', function() {
@@ -117,7 +158,7 @@ gulp.task('resources', function() {
 //
 gulp.task('clean', function() {
   return gulp.src([`${Paths.DEST}/*`], {read: false})
-  .pipe(clean())
+    .pipe(clean())
 });
 
 gulp.task('build', ['clean'], function() {
