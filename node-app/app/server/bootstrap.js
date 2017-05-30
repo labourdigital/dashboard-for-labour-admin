@@ -70,8 +70,10 @@ const __initWorker = () => {
     saveUninitialized: false,
     resave: false,
     secret: Config.auth.sessionSecret,
-    // store: new LevelStore(`${Config.appDataPath}/sessions-${cluster.worker.id}`)
-    store: new RedisStore(Config.redis)
+    store: new RedisStore({
+      url: Config.redis.url,
+      logErrors: true
+    })
   }));
   app.use(passport.initialize());
   app.use(passport.session());

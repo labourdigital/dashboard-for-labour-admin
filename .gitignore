@@ -30,6 +30,7 @@ coverage
 node-app/deploy
 polymer-app/app/serve
 polymer-app/build
+polymer-app/log
 
 # Dependency directories
 node-app/node_modules
