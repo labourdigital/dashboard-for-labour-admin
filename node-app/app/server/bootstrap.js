@@ -71,7 +71,7 @@ const __initWorker = () => {
     resave: false,
     secret: Config.auth.sessionSecret,
     store: new RedisStore({
-      url: Config.redis.url,
+      // url: Config.redis.url,
       logErrors: true
     })
   }));

@@ -35,6 +35,8 @@ const Globs = {
 
 const Environment = {
   NODE_ENV: '',
+  D4LA_CDN_DEV_URL: '',
+  D4LA_CDN_PROD_URL: '',
   D4LA_RHIZOME_DEV_URL: '',
   D4LA_RHIZOME_PROD_URL: '',
   D4LA_RHIZOME_TEST_URL: ''
@@ -50,19 +52,22 @@ for (let variable in Environment) {
 }
 
 function environmentReplace(stream) {
+  let outStr = null;
   switch (Environment.NODE_ENV) {
     case 'production':
-      stream.pipe(replace('%{D4LA_RHIZOME_URL}%', Environment.D4LA_RHIZOME_PROD_URL));
+      outStr = stream.pipe(replace('%{D4LA_CDN_URL}%', Environment.D4LA_CDN_PROD_URL))
+        .pipe(replace('%{D4LA_RHIZOME_URL}%', Environment.D4LA_RHIZOME_PROD_URL));
       break;
     case 'development':
-      stream.pipe(replace('%{D4LA_RHIZOME_URL}%', Environment.D4LA_RHIZOME_DEV_URL));
+      outStr = stream.pipe(replace('%{D4LA_CDN_URL}%', Environment.D4LA_CDN_DEV_URL))
+        .pipe(replace('%{D4LA_RHIZOME_URL}%', Environment.D4LA_RHIZOME_DEV_URL));
       break;
     case 'test':
-      stream.pipe(replace('%{D4LA_RHIZOME_URL}%', Environment.D4LA_RHIZOME_DEV_URL));
+      outStr = stream.pipe(replace('%{D4LA_RHIZOME_URL}%', Environment.D4LA_RHIZOME_DEV_URL));
       break;
   }
 
-  return stream;
+  return outStr;
 }
 
 //

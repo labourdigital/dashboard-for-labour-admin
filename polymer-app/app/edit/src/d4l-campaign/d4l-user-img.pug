@@ -99,7 +99,7 @@ dom-module#d4l-user-img
       },
 
       __computeImageUrl: function(image) {
-        return `http://cdn.forlabour.com/u/${image}`;
+        return `//%{D4LA_CDN_URL}%/u/${image}`;
       },
 
       __computeOwnerUserQuery: function(userId) {

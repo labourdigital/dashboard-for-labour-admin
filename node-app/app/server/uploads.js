@@ -13,6 +13,11 @@
 const fs = require('fs');
 const crypto = require('crypto');
 const Config = require('./config');
+const Logging = require('./logging');
+const Storage = require('@google-cloud/storage');
+const sb = require('stream-buffers');
+
+const storage = Storage();
 
 /* ************************************************************
  *
@@ -70,13 +75,23 @@ const __initUploads = app => {
     hash.update(data);
     let digest = hash.digest('hex');
 
-    fs.writeFile(`${Config.appDataPath}/uploads/${digest}.${fileType[1]}`, buffer, 'binary', err => {
-      if (err) {
-        res.sendStatus(500).json(false);
-        return;
+    let gfile = storage
+      .bucket(Config.cdnBucket)
+      .file(`${digest}.${fileType[1]}`);
+
+    let sbuffer = new sb.ReadableStreamBuffer();
+    sbuffer.put(buffer);
+    sbuffer.stop();
+    sbuffer.pipe(gfile.createWriteStream({
+      public: true,
+      metadata: {
+        contentType: `image/${fileType[1]}`
       }
-      res.json(`${digest}.${fileType[1]}`);
-    });
+    }))
+      .on('finish', () => {
+        res.json(`${digest}.${fileType[1]}`);
+      })
+      .on('err', err => Logging.logError(err));
   });
 
   const tasks = [
