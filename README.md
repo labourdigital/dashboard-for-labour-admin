@@ -2,7 +2,10 @@
 Administration tool for Dashboard for Labour
 
 # What's New
-## version: 1.2.0
+## version: 1.3.0
+- Added support for Google Cloud Storage
+
+## 1.2.0
 - Optimised to run as a cluster. 
 
 ## 1.1.2
