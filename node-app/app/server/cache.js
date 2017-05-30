@@ -10,6 +10,7 @@
  *
  */
 
+const cluster = require("cluster");
 const Config = require("./config");
 const EventEmitter = require('events');
 const rest = require('restler');
@@ -56,7 +57,7 @@ const Constants = {
  * DB
  *
  ******************************************************************/
-const db = levelup(`${Config.appDataPath}/cache`);
+const db = levelup(`${Config.appDataPath}/cache-${cluster.isWorker ? cluster.worker.id : 'master'}`);
 
 /* ****************************************************************
  *

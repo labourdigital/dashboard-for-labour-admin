@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Businesswise CRM
+ * Dashboard for Labour Admin
  *
  * @file auth.js
  * @description
