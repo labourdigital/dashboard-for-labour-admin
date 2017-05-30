@@ -10,12 +10,92 @@
  *
  */
 
+const os = require('os');
+const cluster = require('cluster');
 const Config = require('./config');
+const Logging = require('./logging');
 const Rhizome = require('rhizome-api-js');
 const Auth = require('./auth');
 const Cache = require('./cache');
 const Uploads = require('./uploads');
 const Users = require('./users');
+
+const express = require('express');
+const session = require('express-session');
+const LevelStore = require('level-session-store')(session);
+const methodOverride = require('method-override');
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
+const passport = require('passport');
+
+/* ********************************************************************************
+ *
+ *
+ *
+ **********************************************************************************/
+const processes = os.cpus().length;
+const _workers = [];
+
+/* ********************************************************************************
+ *
+ * WORKERS
+ *
+ **********************************************************************************/
+const __spawnWorkers = () => {
+  Logging.log(`Spawning ${processes} REST Workers`);
+
+  const __spawn = idx => {
+    _workers[idx] = cluster.fork();
+  };
+
+  for (let x = 0; x < processes; x++) {
+    __spawn(x);
+  }
+};
+
+/* ********************************************************************************
+ *
+ * WORKER
+ *
+ **********************************************************************************/
+const __initWorker = () => {
+  let app = express();
+  app.enable('trust proxy', 1);
+  app.use(morgan('short'));
+  app.use(bodyParser.json({limit: '5mb'}));
+  app.use(bodyParser.urlencoded({extended: true}));
+  app.use(methodOverride());
+  app.use(session({
+    saveUninitialized: false,
+    resave: false,
+    secret: Config.auth.sessionSecret,
+    store: new LevelStore(`${Config.appDataPath}/sessions-${cluster.worker.id}`)
+  }));
+  app.use(passport.initialize());
+  app.use(passport.session());
+  app.listen(Config.listenPort);
+
+  Cache.Manager.create(Cache.Constants.Type.TEAM);
+  Auth.init(app);
+  Users.init();
+
+  const tasks = [
+    Uploads.init(app)
+  ];
+
+  return Promise.all(tasks);
+};
+
+/* ********************************************************************************
+ *
+ * MASTER
+ *
+ **********************************************************************************/
+const __initMaster = () => {
+  __spawnWorkers();
+
+  return Promise.resolve();
+};
 
 /* ************************************************************
  *
@@ -23,20 +103,20 @@ const Users = require('./users');
  *
  **************************************************************/
 const _installApp = app => {
+  let p = null;
+
   Rhizome.init({
     rhizomeUrl: Config.auth.rhizome.url,
     appToken: Config.auth.rhizome.appToken
   });
 
-  Cache.Manager.create(Cache.Constants.Type.TEAM);
-  Auth.init(app);
-  Users.init(app);
+  if (cluster.isMaster) {
+    p = __initMaster();
+  } else {
+    p = __initWorker();
+  }
 
-  const tasks = [
-    Uploads.init(app)
-  ];
-
-  return Promise.all(tasks);
+  return p.then(() => cluster.isMaster);
 };
 
 module.exports = {

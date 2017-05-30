@@ -44,7 +44,7 @@ dom-module#d4l-meme-dialog
           .flex
           paper-icon-button#close(icon="d4l-icons:close", on-click="__closeDialog")
 
-      form#form(is="iron-form", on-change="__formChanged", on-iron-form-presubmit="__formPresubmit")
+      form#form(is="iron-form", on-change="__formChanged", on-iron-form-presubmit="__formPresubmit", method="")
         .dialog-body(mobile$="[[isMobile]]")
           paper-input(label="Title", value="{{__item.title}}", error-message="A title is required", required, auto-validate)
           paper-input(label="Description", value="{{__item.description}}")

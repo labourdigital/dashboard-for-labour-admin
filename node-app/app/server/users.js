@@ -21,7 +21,7 @@ const Cache = require('./cache');
  **************************************************************/
 
 class Users {
-  init(app) {
+  init() {
     let team = Cache.Manager.getCache(Cache.Constants.Type.TEAM);
     team.on('cache-data', data => {
       Logging.log('Checking user roles');
@@ -66,7 +66,8 @@ class Users {
           return t.reduce((p, task) => {
             return p.then(task());
           }, Promise.resolve());
-        });
+        })
+        .catch(Logging.Promise.logError());
     });
   }
 }
