@@ -79,7 +79,6 @@ const __initWorker = () => {
   Auth.init(app);
   Users.init();
 
-
   const tasks = [
     Uploads.init(app)
   ];
@@ -93,8 +92,6 @@ const __initWorker = () => {
  *
  **********************************************************************************/
 const __initMaster = () => {
-  const isPrimary = Config.rest.app === "primary";
-
   __spawnWorkers();
 
   return Promise.resolve();
