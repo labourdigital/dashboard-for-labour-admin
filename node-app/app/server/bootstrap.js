@@ -22,7 +22,8 @@ const Users = require('./users');
 
 const express = require('express');
 const session = require('express-session');
-const LevelStore = require('level-session-store')(session);
+const RedisStore = require('connect-redis')(session);
+// const LevelStore = require('level-session-store')(session);
 const methodOverride = require('method-override');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
@@ -69,7 +70,8 @@ const __initWorker = () => {
     saveUninitialized: false,
     resave: false,
     secret: Config.auth.sessionSecret,
-    store: new LevelStore(`${Config.appDataPath}/sessions-${cluster.worker.id}`)
+    // store: new LevelStore(`${Config.appDataPath}/sessions-${cluster.worker.id}`)
+    store: new RedisStore(Config.redis)
   }));
   app.use(passport.initialize());
   app.use(passport.session());
