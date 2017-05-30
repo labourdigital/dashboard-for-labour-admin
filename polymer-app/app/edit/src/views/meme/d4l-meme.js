@@ -29,6 +29,7 @@ Polymer({
   __addMeme: function() {
     this.push('db.campaign.data', {
       name: 'Meme Campaign',
+      description: '',
       type: 'meme',
       status: 'unpublished',
       ownerId: this.get('auth.user.id')
