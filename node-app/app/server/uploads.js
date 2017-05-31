@@ -13,11 +13,12 @@
 const fs = require('fs');
 const crypto = require('crypto');
 const Config = require('./config');
+const Helpers = require('./helpers');
 const Logging = require('./logging');
 const Storage = require('@google-cloud/storage');
 const sb = require('stream-buffers');
 
-const storage = Storage();
+const storage = Storage(); // eslint-disable-line new-cap
 
 /* ************************************************************
  *
@@ -75,23 +76,22 @@ const __initUploads = app => {
     hash.update(data);
     let digest = hash.digest('hex');
 
+    let fname = `${digest}.${fileType[1]}`;
     let gfile = storage
       .bucket(Config.cdnBucket)
-      .file(`${digest}.${fileType[1]}`);
+      .file(fname);
 
-    let sbuffer = new sb.ReadableStreamBuffer();
-    sbuffer.put(buffer);
-    sbuffer.stop();
-    sbuffer.pipe(gfile.createWriteStream({
-      public: true,
-      metadata: {
-        contentType: `image/${fileType[1]}`
-      }
-    }))
-      .on('finish', () => {
-        res.json(`${digest}.${fileType[1]}`);
+    gfile.exists()
+      .then(exists => {
+        if (exists[0]) {
+          Logging.log(`File ${fname} already exists.`);
+          return;
+        }
+
+        return Helpers.GCloud.Storage.saveBuffer(gfile, buffer, {contentType: `images/${fileType[1]}`});
       })
-      .on('err', err => Logging.logError(err));
+      .then(() => res.json(fname))
+      .catch(Logging.Promise.logError());
   });
 
   const tasks = [
