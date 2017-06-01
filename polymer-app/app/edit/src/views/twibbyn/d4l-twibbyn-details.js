@@ -14,7 +14,8 @@ Polymer({
       value: function() {
         return {
           __populate__: true,
-          images: []
+          images: [],
+          userCount: 0
         };
       }
     },
