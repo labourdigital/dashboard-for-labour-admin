@@ -25,7 +25,7 @@
       "title": "Amplify Admin",
       "description": "Application server for Dashboard for Labour Admin.",
       "code": "d4la",
-      "version": "1.3.0",
+      "version": "1.3.1",
       "protocol": "http",
       "subdomain": "admin.amplify",
       "domain": "forlabour.com"
