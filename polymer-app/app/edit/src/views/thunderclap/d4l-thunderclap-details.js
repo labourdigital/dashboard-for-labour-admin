@@ -19,8 +19,9 @@ Polymer({
         return {
           __populate__: true,
           featured: '',
-          date: '',
-          supporter: []
+          thunderclapTime: new Date(),
+          supporters: [],
+          userCount: 0
         };
       }
     },
@@ -60,13 +61,20 @@ Polymer({
   __editCampaign: function() {
     this.__edit.title = this.get('campaign.name');
     this.__edit.description = this.get('campaign.description');
+
+    let date = Sugar.Date.create(this.get('metadata.thunderclapTime'));
+    this.__edit.date = Sugar.Date.format(date, '{yyyy}-{MM}-{dd}');
+    this.__edit.time = Sugar.Date.format(date, '{HH}:{mm}');
+    this.__debug(this.__edit);
     this.__openEditDialog = true;
   },
 
   __saveCampaign: function(ev) {
     this.__debug(ev.detail.item);
-    this.set('campaign.name', ev.detail.item.title);
-    this.set('campaign.description', ev.detail.item.description);
+    let item = ev.detail.item;
+    this.set('campaign.name', item.title);
+    this.set('campaign.description', item.description);
+    this.set('metadata.thunderclapTime',Sugar.Date.create(`${item.date} ${item.time}`).toISOString());
   },
 
   __removeImage: function() {

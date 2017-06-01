@@ -2,7 +2,11 @@
 Administration tool for Dashboard for Labour
 
 # What's New
-## version: 1.3.0
+## version: 1.3.1
+- Added thunderclap editing support
+- Fixed image card layout bugs
+
+## 1.3.0
 - Added support for Google Cloud Storage
 
 ## 1.2.0

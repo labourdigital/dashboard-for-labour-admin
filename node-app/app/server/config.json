@@ -15,19 +15,19 @@
     "D4LA_GOOGLE_CLIENT_ID": "",
     "D4LA_GOOGLE_CLIENT_SECRET": "",
     "D4LA_SESSION_SECRET": "",
-    "D4LA_REDIS_PORT": "6397",
+    "D4LA_REDIS_PORT": "6379",
     "D4LA_REDIS_HOST": "127.0.0.1",
     "D4LA_REDIS_URL": "redis://127.0.0.1:6397"
   },
   "global": {
     "env": "%NODE_ENV%",
     "app": {
-      "title": "Dashboard for Labour Admin",
+      "title": "Amplify Admin",
       "description": "Application server for Dashboard for Labour Admin.",
       "code": "d4la",
-      "version": "1.3.0",
+      "version": "1.3.1",
       "protocol": "http",
-      "subdomain": "admin.dashboard",
+      "subdomain": "admin.amplify",
       "domain": "forlabour.com"
     },
     "api": {
@@ -87,19 +87,19 @@
     },
     "workstation2": {
       "logPath": {
-        "dev":"/home/tom/Work/Workspaces/WebStorm/d4la/node-app/logs/dev",
-        "prod":"/home/tom/Work/Workspaces/WebStorm/d4la/node-app/logs/prod",
-        "test":"/home/tom/Work/Workspaces/WebStorm/d4la/node-app/logs/test"
+        "dev":"/home/tom/Work/Workspaces/WebStorm/labourdigital/digital-hub-admin/node-app/logs/dev",
+        "prod":"/home/tom/Work/Workspaces/WebStorm/labourdigital/digital-hub-admin/node-app/logs/prod",
+        "test":"/home/tom/Work/Workspaces/WebStorm/labourdigital/digital-hub-admin/node-app/logs/test"
       },
       "appDataPath": {
-        "dev": "/home/tom/Work/Workspaces/WebStorm/d4la/node-app/app_data",
-        "prod": "/home/tom/Work/Workspaces/WebStorm/d4la/node-app/app_data",
-        "test": "/home/tom/Work/Workspaces/WebStorm/d4la/node-app/app_data/test"
+        "dev": "/home/tom/Work/Workspaces/WebStorm/labourdigital/digital-hub-admin/node-app/app_data",
+        "prod": "/home/tom/Work/Workspaces/WebStorm/labourdigital/digital-hub-admin/node-app/app_data",
+        "test": "/home/tom/Work/Workspaces/WebStorm/labourdigital/digital-hub-admin/node-app/app_data/test"
       },
       "listenPort": {
-        "dev": 6021,
-        "prod": 6020,
-        "test": 6022
+        "dev": 6031,
+        "prod": 6030,
+        "test": 6032
       }
     },
     "yubaba": {
