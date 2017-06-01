@@ -10,10 +10,7 @@
  *
  */
 
-const Storage = require('@google-cloud/storage');
 const sb = require('stream-buffers');
-
-const storage = Storage(); // eslint-disable-line new-cap
 
 /* ************************************************************
 *
@@ -24,12 +21,14 @@ module.exports.GCloud = {
   Storage: {
     saveBuffer: (file, buffer, metadata, isPrivate) => {
       return new Promise((resolve, reject) => {
+        const isPublic = isPrivate !== true;
+
         let sbuffer = new sb.ReadableStreamBuffer();
         sbuffer.put(buffer);
         sbuffer.stop();
 
         sbuffer.pipe(file.createWriteStream({
-          public: !isPrivate ? true : false,
+          public: isPublic,
           metadata: metadata
         }))
           .on('finish', resolve)
