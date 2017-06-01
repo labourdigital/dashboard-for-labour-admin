@@ -110,7 +110,7 @@ const _installApp = app => {
   let p = null;
 
   Rhizome.init({
-    rhizomeUrl: `${Config.auth.rhizome.url}/api/v1`,
+    rhizomeUrl: `http://${Config.auth.rhizome.url}/api/v1`,
     appToken: Config.auth.rhizome.appToken
   });
 
