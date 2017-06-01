@@ -39,7 +39,6 @@ class Users {
       Rhizome.User.getAll()
         .then(users => {
           users.forEach(u => {
-
             if (!u.auth || u.auth.length < 1) {
               return;
             }
