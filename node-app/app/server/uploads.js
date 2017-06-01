@@ -16,8 +16,6 @@ const Config = require('./config');
 const Helpers = require('./helpers');
 const Logging = require('./logging');
 const Storage = require('@google-cloud/storage');
-const sb = require('stream-buffers');
-
 const storage = Storage(); // eslint-disable-line new-cap
 
 /* ************************************************************
