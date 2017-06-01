@@ -54,7 +54,7 @@ Polymer({
     urlPrefix: {
       type: String,
       value: function() {
-        return `%{D4LA_RHIZOME_URL}%/api/v1`;
+        return `//%{D4LA_RHIZOME_URL}%/api/v1`;
       }
     },
     vectorBaseUrl: {
@@ -74,7 +74,7 @@ Polymer({
     request: {
       type: Object,
       value: {
-        url: '%{D4LA_RHIZOME_URL}%/api/v1',
+        url: '//%{D4LA_RHIZOME_URL}%/api/v1',
         contentType: '',
         response: [],
         entityId: '',
