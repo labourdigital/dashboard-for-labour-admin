@@ -10,15 +10,18 @@ link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
 link(rel="import", href="/bower_components/iron-icons/iron-icons.html")
 link(rel="import", href="/bower_components/iron-pages/iron-pages.html")
 link(rel="import", href="/bower_components/bwt-uploader/bwt-uploader.html")
+link(rel="import" href="/bower_components/paper-date-picker/paper-date-picker.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
 
 link(rel="import", href="/src/d4l-header/d4l-header.html")
+link(rel="import", href="/src/d4l-dates/d4l-dates.html")
 link(rel="import", href="/src/d4l-campaign/d4l-campaign-behavior.html")
 link(rel="import", href="/src/d4l-campaign/d4l-campaign-img.html")
 
 link(rel="import", href="/src/d4l-theme.html")
+link(rel="import", href="/src/d4l-icons.html")
 link(rel="import", href="/src/shared-styles.html")
 
 dom-module#d4l-thunderclap-dialog
@@ -35,7 +38,23 @@ dom-module#d4l-thunderclap-dialog
         width: 75vw;
       }
 
+      iron-icon[icon='d4l-icons:time'] {
+        padding: 8px;
+      }
+
+      paper-input[name="date"] {
+        margin-right: 10px;
+      }
+
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
+
+    paper-dialog#dateDialog.paper-date-picker-dialog(modal, on-iron-overlay-closed="__dismissDateDialog")
+      paper-date-picker#picker(date="{{__pickedDate}}")
+      .buttons
+        paper-button(dialog-dismiss) Cancel
+        paper-button(dialog-confirm) OK
+
+
     paper-dialog#dialog(on-iron-overlay-closed="__dialogClosed", with-backdrop)
       .dialog-header
         .layout.horizontal.center
@@ -47,6 +66,14 @@ dom-module#d4l-thunderclap-dialog
         .dialog-body(mobile$="[[isMobile]]")
           paper-input(label="Title", value="{{__item.title}}", error-message="A title is required", required, auto-validate)
           paper-input(label="Description", value="{{__item.description}}")
+          .layout.horizontal.end
+            .flex-6
+              paper-input(name="date", label="Date", value="{{__item.date}}")
+                paper-icon-button(suffix, icon="d4l-icons:calendar", on-click="__openDateDialog")
+            .flex-6
+              paper-input(name="time", label="Time", value="{{__item.time}}")
+                iron-icon(suffix, icon="d4l-icons:time")
+
 
         .dialog-footer
           .layout.horizontal.center
@@ -64,7 +91,38 @@ dom-module#d4l-thunderclap-dialog
         },
         name: {
           value: 'Thunderclap'
+        },
+        __pickedDate: {
+          type: Object,
+          value: function () {
+            return new Date;
+          }
         }
+      },
+
+      observers: [
+        '__itemDate(__item.date)'
+      ],
+
+      __itemDate: function(date) {
+        if (!date) {
+          return;
+        }
+        this.__pickedDate = Sugar.Date.create(date);
+      },
+
+      __openDateDialog: function() {
+        this.__pickedDate = this.get('metadata.thunderclapTime');
+        this.$.dateDialog.open();
+      },
+
+      __dismissDateDialog: function (ev) {
+        if (!ev.detail.confirmed) {
+          return;
+        }
+
+        this.__debug(Sugar.Date.format(this.__pickedDate));
+        this.set('__item.date', Sugar.Date.format(this.__pickedDate, '{yyyy}-{MM}-{dd}'));
       }
     });
 
@@ -123,11 +181,15 @@ dom-module#d4l-thunderclap-details
       index="0",
       on-update="__saveCampaign"
     )
+    d4l-formatted-date(date="[[metadata.thunderclapTime]]", value="{{__date}}")
+    d4l-formatted-time(date="[[metadata.thunderclapTime]]", value="{{__time}}")
 
     .layout.horizontal.center
       h1 [[campaign.name]]
       paper-icon-button(icon="d4l-icons:edit-circle", on-tap="__editCampaign")
     p [[campaign.description]]
+    p [[__date]], [[__time]]
+    p [[metadata.supporters.length]] Supporters
     h2 Status
     p [[__statusDescription]]
     paper-button(hidden$="[[__published]]", on-tap="__publish") Publish

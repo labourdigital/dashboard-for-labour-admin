@@ -1,0 +1,80 @@
+link(rel="import" href="/bower_components/polymer/polymer.html")
+link(rel="import" href="/src/d4l-logging/d4l-logging.html")
+
+dom-module#d4l-formatted-date
+  template
+    style.
+      :host {
+        display: none;
+      }
+
+  script.
+    Polymer({
+      is: 'd4l-formatted-date',
+      behaviors: [Polymer.D4LLogging],
+      properties: {
+        date: {
+          type: String
+        },
+        format: {
+          type: String,
+          value: '{Weekday} {d} {Month}'
+        },
+        defaultValue: {
+          type: String,
+          value: ''
+        },
+        value: {
+          type: String,
+          computed: '__computeFormatted(date, format)',
+          notify: true
+        }
+      },
+
+      __computeFormatted: function(date, format) {
+        if (date === null || date.length < 1) {
+          return this.get('defaultValue');
+        }
+
+        return Sugar.Date.format(Sugar.Date.create(date), format)
+      }
+    });
+
+dom-module#d4l-formatted-time
+  template
+    style.
+      :host {
+        display: none;
+      }
+
+  script.
+    Polymer({
+      is: 'd4l-formatted-time',
+      behaviors: [Polymer.D4LLogging],
+      properties: {
+        date: {
+          type: String
+        },
+        format: {
+          type: String,
+          value: '{12hr}:{mm}{tt}'
+        },
+        defaultValue: {
+          type: String,
+          value: ''
+        },
+        value: {
+          type: String,
+          computed: '__computeFormatted(date, format)',
+          notify: true
+        }
+      },
+
+      __computeFormatted: function(date, format) {
+        if (date === null || date.length < 1) {
+          return this.get('defaultValue');
+        }
+        return Sugar.Date.format(Sugar.Date.create(date), format)
+      }
+    });
+
