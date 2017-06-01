@@ -39,6 +39,11 @@ class Users {
       Rhizome.User.getAll()
         .then(users => {
           users.forEach(u => {
+
+            if (!u.auth || u.auth.length < 1) {
+              return;
+            }
+
             let found = data.find(user => user.email === u.auth[0].email);
             if (found) {
               let updates = [];
