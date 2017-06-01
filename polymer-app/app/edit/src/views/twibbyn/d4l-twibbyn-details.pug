@@ -141,8 +141,9 @@ dom-module#d4l-twibbyn-details
     h2 Images
     template(is="dom-if", if="[[!metadata.images.length]]")
       p No images yet. Upload some!
-    template(is="dom-repeat", items="[[metadata.images]]", as="image")
-      d4l-campaign-img(image="[[image]]", index="[[$index]]", on-remove="__removeImage")
+    .layout.horizontal.wrap
+      template(is="dom-repeat", items="[[metadata.images]]", as="image")
+        d4l-campaign-img(image="[[image]]", index="[[$index]]", on-remove="__removeImage")
 
     h2 Add Image
     hr

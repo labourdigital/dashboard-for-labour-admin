@@ -16,7 +16,10 @@ dom-module#d4l-campaign-img
       }
 
       .footer.tray {
-        margin: 10px -16px -16px;
+        width: 100%;
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
         background-color: var(--app-color-primary-grey);
       }
 
@@ -26,8 +29,9 @@ dom-module#d4l-campaign-img
 
       .card {
         min-height: 100px;
+        position:relative;
+        margin-right: 10px;
       }
-
 
     .card
       img(src="[[__imageUrl]]", width="200")
